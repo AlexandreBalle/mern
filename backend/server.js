@@ -1,15 +1,18 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import mongoose from 'mongoose';
 import morgan from 'morgan';
 import emoji from 'node-emoji';
 import responseTime from 'response-time';
 import favicon from 'serve-favicon';
 import indexRouter from './routes/index';
+import playerRouter from './routes/player';
 
 const app = express();
 
@@ -52,8 +55,20 @@ app.use(
   })
 );
 
+dotenv.config();
+//`mongodb://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
+mongoose
+  .connect('mongodb://myUser:myPass@localhost:27017/mern', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.error('MongoDB connection success !');
+  });
+
 // routes
 app.use('/', indexRouter);
+app.use('/player', playerRouter);
 
 // setup ip address and port number
 app.set('port', process.env.PORT || 3000);
