@@ -37,7 +37,7 @@ export const login = async (req, res) => {
         firstName: person.firstName,
         lastName: person.lastName,
         token: `Bearer ${token}`,
-        expiration: moment().add(1, 'hour').format('d/mm/YYYY H:m')
+        expiration: moment().add(1, 'hour').format('D/MM/YYYY H:m')
       });
     }
 

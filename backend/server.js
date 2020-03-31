@@ -18,6 +18,7 @@ import personRouter from './routes/person';
 import playerRouter from './routes/player';
 import userRouter from './routes/user';
 
+dotenv.config();
 const app = express();
 
 // secure the server by setting various HTTP headers
@@ -61,14 +62,15 @@ app.use(
 
 app.use(mongoSanitize());
 
-dotenv.config();
-//`mongodb://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
 mongoose
-  .connect('mongodb://myUser:myPass@localhost:27017/mern', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-  })
+  .connect(
+    `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${process.env.HOST}:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    }
+  )
   .then(() => {
     console.error('MongoDB connection success !');
   });
