@@ -5,28 +5,18 @@ import userSchema from '../models/userModel';
 const Message = mongoose.model('Message', messageSchema);
 const User = mongoose.model('User', userSchema);
 
-export const add = (req, res) => {
-  User.findOne({ username: req.body.username }, (err, player) => {
-    if (err) {
-      res.send(err);
-    }
+export const add = async (req, res) => {
+  let user = await User.findOne({ username: req.body.username });
 
-    let user = !player ? new User({ username: req.body.username }) : player;
-    let newMessage = new Message(req.body);
+  if (!user) {
+    user = new User({ username: req.body.username });
+  }
 
-    newMessage.save(err => {
-      if (err) {
-        res.send(err);
-      }
+  let newMessage = new Message({ message: req.body.message });
+  await newMessage.save();
 
-      user.messages.push(newMessage);
-      user.save(err => {
-        if (err) {
-          res.send(err);
-        }
+  user.messages.push(newMessage);
+  user = await user.save();
 
-        res.send(newMessage);
-      });
-    });
-  });
+  res.send(newMessage);
 };
