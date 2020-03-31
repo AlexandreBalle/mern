@@ -22,7 +22,7 @@ const personSchema = new mongoose.Schema({
   }
 });
 
-personSchema.pre('save', next => {
+personSchema.pre('save', function (next) {
   let person = this;
 
   bcrypt.genSalt(10, (err, salt) => {

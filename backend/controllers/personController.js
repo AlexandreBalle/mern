@@ -4,6 +4,12 @@ import moment from 'moment';
 import Person from '../models/personModel';
 
 export const signUp = async (req, res) => {
+  let person = await Person.findOne({ email: req.body.email });
+
+  if (person) {
+    return res.send('This email is already used !');
+  }
+
   let newPerson = new Person(req.body);
   let createdPerson = await newPerson.save();
 
@@ -17,8 +23,7 @@ export const login = async (req, res) => {
     return res.send('This user does not exist !');
   }
 
-  const password = req.body.password;
-  bcrypt.compare(password, person.password, (error, success) => {
+  bcrypt.compare(req.body.password, person.password, (error, success) => {
     if (success) {
       const payload = {
         exp: moment().add(1, 'hour').unix(),
@@ -28,11 +33,11 @@ export const login = async (req, res) => {
 
       let token = jwt.encode(payload, process.env.TOKEN_SECRET);
 
-      res.json({
+      return res.json({
         firstName: person.firstName,
         lastName: person.lastName,
         token: `Bearer ${token}`,
-        expiration: moment().add(1, 'hour').format('YYYY mm dd HH ii')
+        expiration: moment().add(1, 'hour').format('d/mm/YYYY H:m')
       });
     }
 

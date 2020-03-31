@@ -3,7 +3,7 @@ import moment from 'moment';
 import Person from '../models/personModel';
 
 const ensureIsAuthenticated = (req, res, next) => {
-  if (!req.headers.authentication) {
+  if (!req.headers.authorization) {
     return res.status(401).send('Token is missing');
   }
 
