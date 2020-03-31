@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import hpp from 'hpp';
@@ -13,6 +14,7 @@ import responseTime from 'response-time';
 import favicon from 'serve-favicon';
 import indexRouter from './routes/index';
 import messageRouter from './routes/message';
+import personRouter from './routes/person';
 import playerRouter from './routes/player';
 import userRouter from './routes/user';
 
@@ -57,12 +59,15 @@ app.use(
   })
 );
 
+app.use(mongoSanitize());
+
 dotenv.config();
 //`mongodb://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
 mongoose
   .connect('mongodb://myUser:myPass@localhost:27017/mern', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .then(() => {
     console.error('MongoDB connection success !');
@@ -73,6 +78,7 @@ app.use('/', indexRouter);
 app.use('/player', playerRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
+app.use('/person', personRouter);
 
 // setup ip address and port number
 app.set('port', process.env.PORT || 3000);
