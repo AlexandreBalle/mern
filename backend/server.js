@@ -4,7 +4,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
-import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import mongoose from 'mongoose';
@@ -12,6 +11,7 @@ import morgan from 'morgan';
 import emoji from 'node-emoji';
 import responseTime from 'response-time';
 import favicon from 'serve-favicon';
+import fishRouter from './routes/fish';
 import indexRouter from './routes/index';
 import messageRouter from './routes/message';
 import personRouter from './routes/person';
@@ -52,13 +52,13 @@ app.use(morgan('dev'));
 app.use(responseTime());
 
 // limit repeated requests to endpoints such as password reset
-app.use(
+/*app.use(
   new rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 50, // limit each IP to 50 requests per windowMs
     message: 'Too many requests from this IP, please try again in 15 minutes'
   })
-);
+);*/
 
 app.use(mongoSanitize());
 
@@ -81,6 +81,7 @@ app.use('/player', playerRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
 app.use('/person', personRouter);
+app.use('/fish', fishRouter);
 
 // setup ip address and port number
 app.set('port', process.env.PORT || 3000);

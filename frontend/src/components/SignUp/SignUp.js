@@ -11,6 +11,7 @@ import React from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
+import { signUp } from '../../Api';
 import './SignUp.scss';
 
 const validationRules = yup.object().shape({
@@ -48,17 +49,33 @@ const SignUp = () => {
         validationSchema={validationRules}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
-          setTimeout(() => {
-            setSubmitting(false);
-            toast.info('👍 Your registration has been sent', {
-              position: 'bottom-right',
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: false,
-              draggable: true
+          signUp(values)
+            .then(result => {
+              setTimeout(() => {
+                setSubmitting(false);
+                toast.info('👍 Your registration has been sent', {
+                  position: 'bottom-right',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: false,
+                  draggable: true
+                });
+              }, 2000);
+            })
+            .catch(error => {
+              setTimeout(() => {
+                setSubmitting(false);
+                toast.error('Your registration failed', {
+                  position: 'bottom-right',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: false,
+                  draggable: true
+                });
+              }, 2000);
             });
-          }, 3000);
         }}>
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <Container component='main' maxWidth='sm'>

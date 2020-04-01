@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import sampleFishes from '../../sample-fishes';
+import { getFishes } from '../../Api';
 import Fish from '../Fish/Fish';
 import './Home.scss';
 
@@ -7,8 +7,10 @@ const Home = () => {
   const [fishes, setFishes] = useState({});
 
   useEffect(() => {
-    setFishes(sampleFishes);
-  }, [fishes]);
+    getFishes().then(fishesApi => {
+      setFishes(Object.assign({}, fishesApi));
+    });
+  }, []);
 
   return (
     <div className='menu'>

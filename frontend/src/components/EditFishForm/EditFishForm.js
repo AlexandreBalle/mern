@@ -17,7 +17,7 @@ const EditFishForm = props => {
     let newFish = { ...fish };
     newFish[name] = event.target.value;
     setFish(newFish);
-    props.updateFish(props.index, newFish);
+    props.updateFish(newFish);
   };
 
   return (
@@ -30,7 +30,7 @@ const EditFishForm = props => {
       </select>
       <textarea name='desc' onChange={handleChange('desc')} value={fish.desc} />
       <input type='text' name='image' onChange={handleChange('image')} value={fish.image} />
-      <button onClick={() => props.deleteFish(props.index)}>Remove fish</button>
+      <button onClick={() => props.deleteFish(props.fish._id)}>Remove fish</button>
     </div>
   );
 };
